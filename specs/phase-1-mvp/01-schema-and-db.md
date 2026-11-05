@@ -142,5 +142,5 @@ if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma;
 - [ ] **Step 2: PostgreSQL & Prisma Database Layer**
   - [x] **Sub-step 2.1**: Install Prisma dependencies (`prisma`, `@prisma/client`)
   - [x] **Sub-step 2.2**: Write `prisma/schema.prisma` with `User`, `Category`, `Tag`, `Post`, `PostTag`
-  - [ ] **Sub-step 2.3**: Create cached Prisma singleton client in `lib/prisma.ts`
+  - [x] **Sub-step 2.3**: Create cached Prisma singleton client in `lib/prisma.ts`
   - [ ] **Sub-step 2.4**: Generate Prisma client types (`npx prisma generate`) and prepare `.env.example`

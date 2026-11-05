@@ -30,7 +30,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 - [x] **Sub-step 2.2**: Write `prisma/schema.prisma` with `User`, `Category`, `Tag`, `Post`, `PostTag`.
   - _Verify_: Run `npx prisma validate`.
   - _Commit_: `feat(db): define complete prisma relational schema`.
-- [ ] **Sub-step 2.3**: Create Prisma singleton client in `lib/prisma.ts`.
+- [x] **Sub-step 2.3**: Create Prisma singleton client in `lib/prisma.ts`.
   - _Verify_: `npx tsc --noEmit` passes.
   - _Commit_: `feat(db): create cached prisma singleton instance`.
 - [ ] **Sub-step 2.4**: Generate Prisma client types and prepare `.env.example`.
