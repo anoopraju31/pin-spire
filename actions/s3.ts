@@ -30,9 +30,7 @@ export type GetPresignedUrlResult = {
  * Server Action: getPresignedUrlAction
  * Validates the file payload and issues a temporary signed S3 PUT URL for direct browser-to-S3 uploads.
  */
-export async function getPresignedUrlAction(
-  input: GetPresignedUrlInput
-): Promise<GetPresignedUrlResult> {
+export async function getPresignedUrlAction(input: GetPresignedUrlInput): Promise<GetPresignedUrlResult> {
   try {
     if (!input || !input.filename || !input.contentType || typeof input.fileSize !== 'number') {
       return {
