@@ -11,7 +11,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - Fix loader recursion issue causing build panics on Windows.
   - _Verify_: `npm run build` succeeds without Turbopack panic.
   - _Commit_: `chore: configure next.config for stable css compilation`.
-- [ ] **Sub-step 1.2**: Define Sketchbook Theme tokens in `app/globals.css`.
+- [x] **Sub-step 1.2**: Define Sketchbook Theme tokens in `app/globals.css`.
   - Add color tokens, sketchy border utility (`.border-sketch`), and tactile shadows using Tailwind CSS `@theme`.
   - _Verify_: `npx tsc --noEmit` and styles compile cleanly.
   - _Commit_: `style: define sketchbook design tokens and sketchy border utilities`.

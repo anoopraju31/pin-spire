@@ -1,1 +1,35 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-canvas: #FAF7F2;
+  --color-surface: #FFFFFF;
+  --color-surface-tint: #F4EFEB;
+  --color-brand-primary: #D95328;
+  --color-brand-hover: #BF431C;
+  --color-ink: #2B2523;
+  --color-ink-muted: #7A726D;
+  --color-accent-pin: #C84B22;
+  --color-error: #D32F2F;
+
+  --shadow-sketch: 2px 3px 0px #2B2523;
+  --shadow-sketch-pressed: 1px 2px 0px #2B2523;
+  --shadow-sketch-hover: 3px 4px 0px #2B2523;
+}
+
+@utility border-sketch {
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--color-ink);
+}
+
+@utility shadow-sketch {
+  box-shadow: 2px 3px 0px var(--color-ink);
+}
+
+@utility shadow-sketch-pressed {
+  box-shadow: 1px 2px 0px var(--color-ink);
+}
+
+@utility shadow-sketch-hover {
+  box-shadow: 3px 4px 0px var(--color-ink);
+}

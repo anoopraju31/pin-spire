@@ -70,7 +70,7 @@ Track overall Phase 1 progress. Mark sub-steps as `[x]` upon verification and co
 
 - [ ] **Step 1: Design Tokens & Build Stability**
   - [x] Sub-step 1.1: Resolve Next.js 16 / Turbopack CSS configuration in `next.config.ts`
-  - [ ] Sub-step 1.2: Define Sketchbook Theme tokens in `app/globals.css`
+  - [x] Sub-step 1.2: Define Sketchbook Theme tokens in `app/globals.css`
   - [ ] Sub-step 1.3: Update root layout metadata and canvas branding in `app/layout.tsx`
 
 - [ ] **Step 2: PostgreSQL & Prisma Database Layer**
