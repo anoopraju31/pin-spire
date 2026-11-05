@@ -1,0 +1,97 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Orientation {
+  PORTRAIT
+  LANDSCAPE
+  SQUARE
+}
+
+model User {
+  id         String   @id @default(cuid())
+  clerkId    String   @unique @map("clerk_id")
+  fullName   String   @map("fullname")
+  username   String   @unique @map("user_id")
+  email      String   @unique
+  profileImg String?  @map("profile_img")
+  createdAt  DateTime @default(now()) @map("create_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  posts      Post[]
+
+  @@map("users")
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  posts     Post[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  createdAt DateTime  @default(now()) @map("create_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  postTags  PostTag[]
+
+  @@map("tags")
+}
+
+model Post {
+  id             String      @id @default(cuid())
+  title          String
+  description    String?     @db.Text
+  imageUrl       String      @map("image_url")
+  imageKey       String      @map("image_key")
+  destinationUrl String?     @map("destination_url")
+  orientation    Orientation @default(PORTRAIT)
+  createdAt      DateTime    @default(now()) @map("create_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  // Foreign keys
+  categoryId     String      @map("category_id")
+  userId         String      @map("user_id")
+
+  // Relations
+  category       Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  author         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postTags       PostTag[]
+
+  // Performance Indexes for Feed sorting & filtering
+  @@index([categoryId])
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@map("posts")
+}
+
+model PostTag {
+  id        String   @id @default(cuid())
+  postId    String   @map("post_id")
+  tagId     String   @map("tag_id")
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  // Enforce unique post-tag pairing
+  @@unique([postId, tagId])
+  @@index([tagId])
+  @@map("post_tags")
+}

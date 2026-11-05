@@ -75,7 +75,7 @@ Track overall Phase 1 progress. Mark sub-steps as `[x]` upon verification and co
 
 - [ ] **Step 2: PostgreSQL & Prisma Database Layer**
   - [x] Sub-step 2.1: Install Prisma dependencies (`prisma`, `@prisma/client`)
-  - [ ] Sub-step 2.2: Define Prisma relational schema (`User`, `Category`, `Tag`, `Post`, `PostTag`)
+  - [x] Sub-step 2.2: Define Prisma relational schema (`User`, `Category`, `Tag`, `Post`, `PostTag`)
   - [ ] Sub-step 2.3: Create cached Prisma singleton client in `lib/prisma.ts`
   - [ ] Sub-step 2.4: Generate Prisma client types and prepare `.env.example`
 

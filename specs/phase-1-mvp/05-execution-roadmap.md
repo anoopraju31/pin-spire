@@ -27,7 +27,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 - [x] **Sub-step 2.1**: Install Prisma dependencies (`prisma`, `@prisma/client`).
   - _Verify_: `npm list prisma @prisma/client` shows clean installation.
   - _Commit_: `chore(db): install prisma and prisma-client`.
-- [ ] **Sub-step 2.2**: Write `prisma/schema.prisma` with `User`, `Category`, `Tag`, `Post`, `PostTag`.
+- [x] **Sub-step 2.2**: Write `prisma/schema.prisma` with `User`, `Category`, `Tag`, `Post`, `PostTag`.
   - _Verify_: Run `npx prisma validate`.
   - _Commit_: `feat(db): define complete prisma relational schema`.
 - [ ] **Sub-step 2.3**: Create Prisma singleton client in `lib/prisma.ts`.
