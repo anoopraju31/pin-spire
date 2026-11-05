@@ -81,5 +81,5 @@ AWS_S3_BUCKET_NAME="pin-spire-uploads"
 
 - [ ] **Step 3: AWS S3 Presigned URL Media Storage**
   - [x] **Sub-step 3.1**: Install AWS S3 SDK (`@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`)
-  - [ ] **Sub-step 3.2**: Create S3 client configuration and validation helpers in `lib/s3.ts`
+  - [x] **Sub-step 3.2**: Create S3 client configuration and validation helpers in `lib/s3.ts`
   - [ ] **Sub-step 3.3**: Implement Server Action `getPresignedUrlAction` in `actions/s3.ts`
