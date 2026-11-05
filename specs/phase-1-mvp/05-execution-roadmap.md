@@ -43,7 +43,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 
 ## - [ ] Step 3: AWS S3 Presigned URL Media Storage
 
-- [ ] **Sub-step 3.1**: Install AWS S3 SDK (`@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`).
+- [x] **Sub-step 3.1**: Install AWS S3 SDK (`@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`).
   - _Verify_: Packages installed without dependency conflicts.
   - _Commit_: `chore(s3): install aws s3 and presigner packages`.
 - [ ] **Sub-step 3.2**: Create S3 client configuration and validation helpers in `lib/s3.ts`.
