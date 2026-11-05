@@ -41,7 +41,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 
 ---
 
-## - [ ] Step 3: AWS S3 Presigned URL Media Storage
+## - [x] Step 3: AWS S3 Presigned URL Media Storage
 
 - [x] **Sub-step 3.1**: Install AWS S3 SDK (`@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`).
   - _Verify_: Packages installed without dependency conflicts.
@@ -50,7 +50,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - Validate image MIME types (JPEG, PNG, WebP) and maximum file size (10MB).
   - _Verify_: `npx tsc --noEmit` passes.
   - _Commit_: `feat(s3): configure s3 client and upload validation utilities`.
-- [ ] **Sub-step 3.3**: Implement Server Action `getPresignedUrlAction` in `actions/s3.ts`.
+- [x] **Sub-step 3.3**: Implement Server Action `getPresignedUrlAction` in `actions/s3.ts`.
   - Sign `PutObjectCommand` with a 60-second expiration.
   - _Verify_: Typecheck passes.
   - _Commit_: `feat(s3): create presigned url generation server action`.
