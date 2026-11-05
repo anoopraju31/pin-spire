@@ -68,10 +68,10 @@ app/
 
 Track overall Phase 1 progress. Mark sub-steps as `[x]` upon verification and commit; mark the parent step as `[x]` once all its sub-steps are completed. Detailed verification criteria and commit instructions for each sub-step are located in [`05-execution-roadmap.md`](./05-execution-roadmap.md).
 
-- [ ] **Step 1: Design Tokens & Build Stability**
+- [x] **Step 1: Design Tokens & Build Stability**
   - [x] Sub-step 1.1: Resolve Next.js 16 / Turbopack CSS configuration in `next.config.ts`
   - [x] Sub-step 1.2: Define Sketchbook Theme tokens in `app/globals.css`
-  - [ ] Sub-step 1.3: Update root layout metadata and canvas branding in `app/layout.tsx`
+  - [x] Sub-step 1.3: Update root layout metadata and canvas branding in `app/layout.tsx`
 
 - [ ] **Step 2: PostgreSQL & Prisma Database Layer**
   - [ ] Sub-step 2.1: Install Prisma dependencies (`prisma`, `@prisma/client`)

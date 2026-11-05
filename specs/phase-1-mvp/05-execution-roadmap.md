@@ -5,7 +5,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 
 ---
 
-## - [ ] Step 1: Design Tokens & Build Stability
+## - [x] Step 1: Design Tokens & Build Stability
 
 - [x] **Sub-step 1.1**: Resolve Next.js 16 / Turbopack CSS configuration in `next.config.ts`.
   - Fix loader recursion issue causing build panics on Windows.
@@ -15,7 +15,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - Add color tokens, sketchy border utility (`.border-sketch`), and tactile shadows using Tailwind CSS `@theme`.
   - _Verify_: `npx tsc --noEmit` and styles compile cleanly.
   - _Commit_: `style: define sketchbook design tokens and sketchy border utilities`.
-- [ ] **Sub-step 1.3**: Update root layout metadata and branding in `app/layout.tsx`.
+- [x] **Sub-step 1.3**: Update root layout metadata and branding in `app/layout.tsx`.
   - Apply warm canvas background `#FAF7F2` and update page title to "Pin-Spire".
   - _Verify_: Root layout renders with warm canvas background.
   - _Commit_: `feat: set application branding metadata and root canvas layout`.
