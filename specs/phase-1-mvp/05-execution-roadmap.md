@@ -24,7 +24,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 
 ## - [ ] Step 2: PostgreSQL & Prisma Database Layer
 
-- [ ] **Sub-step 2.1**: Install Prisma dependencies (`prisma`, `@prisma/client`).
+- [x] **Sub-step 2.1**: Install Prisma dependencies (`prisma`, `@prisma/client`).
   - _Verify_: `npm list prisma @prisma/client` shows clean installation.
   - _Commit_: `chore(db): install prisma and prisma-client`.
 - [ ] **Sub-step 2.2**: Write `prisma/schema.prisma` with `User`, `Category`, `Tag`, `Post`, `PostTag`.

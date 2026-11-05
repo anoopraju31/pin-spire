@@ -74,7 +74,7 @@ Track overall Phase 1 progress. Mark sub-steps as `[x]` upon verification and co
   - [x] Sub-step 1.3: Update root layout metadata and canvas branding in `app/layout.tsx`
 
 - [ ] **Step 2: PostgreSQL & Prisma Database Layer**
-  - [ ] Sub-step 2.1: Install Prisma dependencies (`prisma`, `@prisma/client`)
+  - [x] Sub-step 2.1: Install Prisma dependencies (`prisma`, `@prisma/client`)
   - [ ] Sub-step 2.2: Define Prisma relational schema (`User`, `Category`, `Tag`, `Post`, `PostTag`)
   - [ ] Sub-step 2.3: Create cached Prisma singleton client in `lib/prisma.ts`
   - [ ] Sub-step 2.4: Generate Prisma client types and prepare `.env.example`
