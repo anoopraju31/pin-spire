@@ -7,7 +7,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 
 ## - [ ] Step 1: Design Tokens & Build Stability
 
-- [ ] **Sub-step 1.1**: Resolve Next.js 16 / Turbopack CSS configuration in `next.config.ts`.
+- [x] **Sub-step 1.1**: Resolve Next.js 16 / Turbopack CSS configuration in `next.config.ts`.
   - Fix loader recursion issue causing build panics on Windows.
   - _Verify_: `npm run build` succeeds without Turbopack panic.
   - _Commit_: `chore: configure next.config for stable css compilation`.
