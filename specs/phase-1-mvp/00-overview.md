@@ -73,11 +73,11 @@ Track overall Phase 1 progress. Mark sub-steps as `[x]` upon verification and co
   - [x] Sub-step 1.2: Define Sketchbook Theme tokens in `app/globals.css`
   - [x] Sub-step 1.3: Update root layout metadata and canvas branding in `app/layout.tsx`
 
-- [ ] **Step 2: PostgreSQL & Prisma Database Layer**
+- [x] **Step 2: PostgreSQL & Prisma Database Layer**
   - [x] Sub-step 2.1: Install Prisma dependencies (`prisma`, `@prisma/client`)
   - [x] Sub-step 2.2: Define Prisma relational schema (`User`, `Category`, `Tag`, `Post`, `PostTag`)
   - [x] Sub-step 2.3: Create cached Prisma singleton client in `lib/prisma.ts`
-  - [ ] Sub-step 2.4: Generate Prisma client types and prepare `.env.example`
+  - [x] Sub-step 2.4: Generate Prisma client types and prepare `.env.example`
 
 - [ ] **Step 3: AWS S3 Presigned URL Media Storage**
   - [ ] Sub-step 3.1: Install AWS S3 SDK (`@aws-sdk/client-s3`, `@aws-sdk/s3-request-presigner`)

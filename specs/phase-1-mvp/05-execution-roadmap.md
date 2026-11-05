@@ -22,7 +22,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 
 ---
 
-## - [ ] Step 2: PostgreSQL & Prisma Database Layer
+## - [x] Step 2: PostgreSQL & Prisma Database Layer
 
 - [x] **Sub-step 2.1**: Install Prisma dependencies (`prisma`, `@prisma/client`).
   - _Verify_: `npm list prisma @prisma/client` shows clean installation.
@@ -33,7 +33,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 - [x] **Sub-step 2.3**: Create Prisma singleton client in `lib/prisma.ts`.
   - _Verify_: `npx tsc --noEmit` passes.
   - _Commit_: `feat(db): create cached prisma singleton instance`.
-- [ ] **Sub-step 2.4**: Generate Prisma client types and prepare `.env.example`.
+- [x] **Sub-step 2.4**: Generate Prisma client types and prepare `.env.example`.
   - Add `DATABASE_URL` placeholder.
   - Run `npx prisma generate`.
   - _Verify_: Types import successfully in scratch test.
