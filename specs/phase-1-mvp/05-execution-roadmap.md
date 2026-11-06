@@ -64,10 +64,10 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - Implement Zod schemas in `lib/validations/auth.ts` and `lib/validations/post.ts`.
   - _Verify_: Typecheck passes.
   - _Commit_: `feat(ui): implement compound form components and zod schemas`.
-- [x] **Sub-step 4.2**: Install `@clerk/nextjs` and configure Clerk middleware in `middleware.ts`.
+- [x] **Sub-step 4.2**: Install `@clerk/nextjs` and configure Clerk proxy in `proxy.ts` (Next.js 16).
   - Define public routes (`/`, `/register`) and protected routes (`/posts(.*)`).
   - _Verify_: Unauthenticated requests to `/posts` are intercepted.
-  - _Commit_: `feat(auth): configure clerk middleware and route protection`.
+  - _Commit_: `feat(auth): configure clerk proxy and route protection`.
 - [ ] **Sub-step 4.3**: Build reusable Sketchbook UI elements:
   - `components/ui/sketch-input.tsx` (sketchy pencil border input).
   - `components/ui/sketch-button.tsx` (terracotta primary and draft buttons).

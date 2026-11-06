@@ -15,18 +15,22 @@ User authentication and session management are handled by **Clerk** (`@clerk/nex
 
 ---
 
-## 2. Route Protection & Middleware (`middleware.ts`)
+## 2. Route Protection & Proxy (`proxy.ts`)
+
+> **Next.js 16 Convention**: Starting with Next.js 16, `middleware.ts` is deprecated and renamed to `proxy.ts` to clarify its role at the network boundary.
 
 ```typescript
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 
 const isPublicRoute = createRouteMatcher(['/', '/register(.*)', '/api/webhooks(.*)']);
 
-export default clerkMiddleware(async (auth, request) => {
+export const proxy = clerkMiddleware(async (auth, request) => {
   if (!isPublicRoute(request)) {
     await auth.protect();
   }
 });
+
+export default proxy;
 
 export const config = {
   matcher: [
@@ -67,7 +71,7 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/posts"
 
 - [ ] **Step 4: UI Form Core & Clerk Authentication (`/` & `/register`)**
   - [x] **Sub-step 4.1**: Install form dependencies & implement compound `<Form>` components
-  - [x] **Sub-step 4.2**: Install `@clerk/nextjs` & configure route protection middleware in `middleware.ts`
+  - [x] **Sub-step 4.2**: Install `@clerk/nextjs` & configure route protection in `proxy.ts` (Next.js 16 Proxy convention)
   - [ ] **Sub-step 4.3**: Build reusable Sketchbook UI elements (`SketchInput`, `SketchButton`, `PolaroidCollage`)
   - [ ] **Sub-step 4.4**: Build custom Sketchbook Login Page (`app/(auth)/page.tsx`)
   - [ ] **Sub-step 4.5**: Build custom Sketchbook Registration Page (`app/(auth)/register/page.tsx`)
