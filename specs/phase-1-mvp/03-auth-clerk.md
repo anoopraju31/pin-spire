@@ -84,4 +84,4 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/posts"
   - [x] **Sub-step 4.3**: Build reusable Sketchbook UI elements (`SketchInput`, `SketchButton`, `PolaroidCollage`)
   - [x] **Sub-step 4.4**: Build custom Sketchbook Login Page (`app/(auth)/page.tsx`)
   - [x] **Sub-step 4.5**: Build custom Sketchbook Registration Page (`app/(auth)/register/page.tsx`)
-  - [ ] **Sub-step 4.6**: Implement user database synchronization to PostgreSQL `users` table
+  - [x] **Sub-step 4.6**: Implement user database synchronization to PostgreSQL `users` table

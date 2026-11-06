@@ -82,7 +82,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - Match mockup `register.png` using `<Form>` + Clerk `useSignUp()`.
   - _Verify_: Validates matching passwords & terms checkbox, registers user in Clerk.
   - _Commit_: `feat(auth): implement custom sketchbook registration page`.
-- [ ] **Sub-step 4.6**: Sync Clerk user to PostgreSQL `users` table.
+- [x] **Sub-step 4.6**: Sync Clerk user to PostgreSQL `users` table.
   - _Verify_: Database contains matching user row with `clerk_id`.
   - _Commit_: `feat(auth): sync authenticated clerk users to postgresql`.
 
