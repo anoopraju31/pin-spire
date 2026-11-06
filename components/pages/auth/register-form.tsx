@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSignUp, useSignIn } from '@clerk/nextjs/legacy';
+import { useAuth } from '@clerk/nextjs';
 
 import { registerSchema, type RegisterInput } from '@/lib/validations/auth';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
@@ -17,11 +18,19 @@ export const RegisterForm: React.FC = () => {
   const router = useRouter();
   const { isLoaded, signUp, setActive } = useSignUp();
   const { signIn } = useSignIn();
+  const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
 
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  // If already authenticated, redirect immediately to feed
+  React.useEffect(() => {
+    if (isAuthLoaded && isSignedIn) {
+      window.location.href = '/posts';
+    }
+  }, [isAuthLoaded, isSignedIn]);
 
   // Email verification state
   const [pendingVerification, setPendingVerification] = React.useState(false);
@@ -61,12 +70,17 @@ export const RegisterForm: React.FC = () => {
         setPendingVerification(true);
       } else if (signUp.status === 'complete') {
         await setActive({ session: signUp.createdSessionId });
-        router.push('/posts');
+        window.location.href = '/posts';
       } else {
-        router.push('/posts');
+        window.location.href = '/posts';
       }
     } catch (err: unknown) {
-      const clerkError = (err as { errors?: Array<{ longMessage?: string; message?: string }> })?.errors?.[0];
+      const clerkError = (err as { errors?: Array<{ code?: string; longMessage?: string; message?: string }> })
+        ?.errors?.[0];
+      if (clerkError?.code === 'session_exists' || clerkError?.message?.toLowerCase().includes('already signed in')) {
+        window.location.href = '/posts';
+        return;
+      }
       const message =
         clerkError?.longMessage ||
         clerkError?.message ||
@@ -91,12 +105,17 @@ export const RegisterForm: React.FC = () => {
 
       if (completeSignUp.status === 'complete') {
         await setActive({ session: completeSignUp.createdSessionId });
-        router.push('/posts');
+        window.location.href = '/posts';
       } else {
         setVerificationError('Verification incomplete. Please check your code or try again.');
       }
     } catch (err: unknown) {
-      const clerkError = (err as { errors?: Array<{ longMessage?: string; message?: string }> })?.errors?.[0];
+      const clerkError = (err as { errors?: Array<{ code?: string; longMessage?: string; message?: string }> })
+        ?.errors?.[0];
+      if (clerkError?.code === 'session_exists' || clerkError?.message?.toLowerCase().includes('already signed in')) {
+        window.location.href = '/posts';
+        return;
+      }
       const message = clerkError?.longMessage || clerkError?.message || 'Invalid verification code. Please try again.';
       setVerificationError(message);
     } finally {
@@ -122,7 +141,12 @@ export const RegisterForm: React.FC = () => {
         });
       }
     } catch (err: unknown) {
-      const clerkError = (err as { errors?: Array<{ longMessage?: string; message?: string }> })?.errors?.[0];
+      const clerkError = (err as { errors?: Array<{ code?: string; longMessage?: string; message?: string }> })
+        ?.errors?.[0];
+      if (clerkError?.code === 'session_exists' || clerkError?.message?.toLowerCase().includes('already signed in')) {
+        window.location.href = '/posts';
+        return;
+      }
       const message =
         clerkError?.longMessage ||
         clerkError?.message ||

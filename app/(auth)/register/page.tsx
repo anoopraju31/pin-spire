@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { auth } from '@clerk/nextjs/server';
 import { PolaroidCollage } from '@/components/shared/polaroid-collage';
 import { RegisterForm } from '@/components/pages/auth/register-form';
 import { SketchCoffeeStain } from '@/components/shared/sketch-coffee-stain';
@@ -16,7 +18,12 @@ export const metadata: Metadata = {
   description: 'Join Pin-Spire to sketch, pin, and share your creative vision.',
 };
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+  const { userId } = await auth();
+  if (userId) {
+    redirect('/posts');
+  }
+
   return (
     <main className="bg-canvas relative flex min-h-screen w-full items-center justify-center overflow-x-hidden">
       {/* Decorative Doodles & Coffee Stains for Mobile/Tablet Background */}

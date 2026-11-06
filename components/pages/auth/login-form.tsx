@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSignIn } from '@clerk/nextjs/legacy';
+import { useAuth } from '@clerk/nextjs';
 
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
@@ -16,10 +17,18 @@ import { WarningDoodle, SketchLine } from '@/components/shared/sketch-doodles';
 export const LoginForm: React.FC = () => {
   const router = useRouter();
   const { isLoaded, signIn, setActive } = useSignIn();
+  const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
 
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
+
+  // If already authenticated, redirect immediately to feed
+  React.useEffect(() => {
+    if (isAuthLoaded && isSignedIn) {
+      window.location.href = '/posts';
+    }
+  }, [isAuthLoaded, isSignedIn]);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -42,12 +51,17 @@ export const LoginForm: React.FC = () => {
 
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });
-        router.push('/posts');
+        window.location.href = '/posts';
       } else {
-        router.push('/posts');
+        window.location.href = '/posts';
       }
     } catch (err: unknown) {
-      const clerkError = (err as { errors?: Array<{ longMessage?: string; message?: string }> })?.errors?.[0];
+      const clerkError = (err as { errors?: Array<{ code?: string; longMessage?: string; message?: string }> })
+        ?.errors?.[0];
+      if (clerkError?.code === 'session_exists' || clerkError?.message?.toLowerCase().includes('already signed in')) {
+        window.location.href = '/posts';
+        return;
+      }
       const message =
         clerkError?.longMessage || clerkError?.message || 'Invalid username/email or password. Please try again.';
       setAuthError(message);
@@ -67,9 +81,12 @@ export const LoginForm: React.FC = () => {
         redirectUrlComplete: '/posts',
       });
     } catch (err: unknown) {
-      const clerkError =
-        (err as { errors?: Array<{ longMessage?: string; message?: string }> })
-          ?.errors?.[0];
+      const clerkError = (err as { errors?: Array<{ code?: string; longMessage?: string; message?: string }> })
+        ?.errors?.[0];
+      if (clerkError?.code === 'session_exists' || clerkError?.message?.toLowerCase().includes('already signed in')) {
+        window.location.href = '/posts';
+        return;
+      }
       const message =
         clerkError?.longMessage ||
         clerkError?.message ||
@@ -190,14 +207,14 @@ export const LoginForm: React.FC = () => {
           </div>
 
           {/* Clerk CAPTCHA container for challenge verification */}
-          <div id="clerk-captcha" className="w-full flex justify-center empty:hidden" />
+          <div id="clerk-captcha" className="flex w-full justify-center empty:hidden" />
         </form>
       </Form>
 
       {/* Hand-Drawn Styled Divider: — or continue with — */}
       <div className="my-4 flex w-full items-center gap-2 select-none">
         <SketchLine className="flex-1" />
-        <span className="font-sketch text-ink text-xs font-bold whitespace-nowrap px-1">or continue with</span>
+        <span className="font-sketch text-ink px-1 text-xs font-bold whitespace-nowrap">or continue with</span>
         <SketchLine className="flex-1 -scale-x-100" />
       </div>
 
