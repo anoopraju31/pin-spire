@@ -214,8 +214,8 @@ export type CreatePostInput = z.infer<typeof createPostSchema>;
 
 ## 3. Form Implementation Tracking Checklist
 
-- [ ] **Sub-step 4.1: UI Form Core & Zod Validation Setup**
-  - [ ] Install dependencies: `react-hook-form`, `zod`, `@hookform/resolvers`
-  - [ ] Create `components/ui/form/index.tsx` with pure Tailwind CSS classes
-  - [ ] Create `lib/validations/auth.ts` (`loginSchema`, `registerSchema`)
-  - [ ] Create `lib/validations/post.ts` (`createPostSchema`)
+- [x] **Sub-step 4.1: UI Form Core & Zod Validation Setup**
+  - [x] Install dependencies: `react-hook-form`, `zod`, `@hookform/resolvers`
+  - [x] Create `components/ui/form/index.tsx` with pure Tailwind CSS classes
+  - [x] Create `lib/validations/auth.ts` (`loginSchema`, `registerSchema`)
+  - [x] Create `lib/validations/post.ts` (`createPostSchema`)

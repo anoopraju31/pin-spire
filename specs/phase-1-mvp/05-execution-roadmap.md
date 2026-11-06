@@ -59,7 +59,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 
 ## - [ ] Step 4: UI Form Core & Clerk Authentication (`/` & `/register`)
 
-- [ ] **Sub-step 4.1**: Install form dependencies (`react-hook-form`, `zod`, `@hookform/resolvers`).
+- [x] **Sub-step 4.1**: Install form dependencies (`react-hook-form`, `zod`, `@hookform/resolvers`).
   - Implement compound `<Form>` components in `components/ui/form/index.tsx` using pure Tailwind CSS.
   - Implement Zod schemas in `lib/validations/auth.ts` and `lib/validations/post.ts`.
   - _Verify_: Typecheck passes.

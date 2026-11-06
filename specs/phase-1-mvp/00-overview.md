@@ -85,7 +85,7 @@ Track overall Phase 1 progress. Mark sub-steps as `[x]` upon verification and co
   - [x] Sub-step 3.3: Implement Server Action `getPresignedUrlAction` in `actions/s3.ts`
 
 - [ ] **Step 4: UI Form Core & Clerk Authentication (`/` & `/register`)**
-  - [ ] Sub-step 4.1: Install form dependencies & implement compound `<Form>` components
+  - [x] Sub-step 4.1: Install form dependencies & implement compound `<Form>` components
   - [ ] Sub-step 4.2: Install `@clerk/nextjs` & configure route protection middleware
   - [ ] Sub-step 4.3: Build reusable Sketchbook UI elements (inputs, buttons, polaroid collage)
   - [ ] Sub-step 4.4: Build custom Sketchbook Login Page (`app/(auth)/page.tsx`)
