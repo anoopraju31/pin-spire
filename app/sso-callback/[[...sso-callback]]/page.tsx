@@ -2,17 +2,10 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { AuthenticateWithRedirectCallback, useAuth } from '@clerk/nextjs';
+import { AuthenticateWithRedirectCallback } from '@clerk/nextjs';
 
 export default function SSOCallbackPage() {
-  const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
   const [timedOut, setTimedOut] = React.useState(false);
-
-  React.useEffect(() => {
-    if (isAuthLoaded && isSignedIn) {
-      window.location.href = '/posts';
-    }
-  }, [isAuthLoaded, isSignedIn]);
 
   React.useEffect(() => {
     // If Clerk handshake takes longer than 6 seconds, surface recovery actions

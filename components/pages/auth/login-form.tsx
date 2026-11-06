@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSignIn } from '@clerk/nextjs/legacy';
-import { useAuth } from '@clerk/nextjs';
 
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
@@ -17,18 +16,10 @@ import { WarningDoodle, SketchLine } from '@/components/shared/sketch-doodles';
 export const LoginForm: React.FC = () => {
   const router = useRouter();
   const { isLoaded, signIn, setActive } = useSignIn();
-  const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
 
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
-
-  // If already authenticated, redirect immediately to feed
-  React.useEffect(() => {
-    if (isAuthLoaded && isSignedIn) {
-      window.location.href = '/posts';
-    }
-  }, [isAuthLoaded, isSignedIn]);
 
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),

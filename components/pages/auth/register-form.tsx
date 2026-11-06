@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSignUp, useSignIn } from '@clerk/nextjs/legacy';
-import { useAuth } from '@clerk/nextjs';
 
 import { registerSchema, type RegisterInput } from '@/lib/validations/auth';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
@@ -18,19 +17,11 @@ export const RegisterForm: React.FC = () => {
   const router = useRouter();
   const { isLoaded, signUp, setActive } = useSignUp();
   const { signIn } = useSignIn();
-  const { isSignedIn, isLoaded: isAuthLoaded } = useAuth();
 
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-
-  // If already authenticated, redirect immediately to feed
-  React.useEffect(() => {
-    if (isAuthLoaded && isSignedIn) {
-      window.location.href = '/posts';
-    }
-  }, [isAuthLoaded, isSignedIn]);
 
   // Email verification state
   const [pendingVerification, setPendingVerification] = React.useState(false);
