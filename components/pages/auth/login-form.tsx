@@ -11,7 +11,7 @@ import { loginSchema, type LoginInput } from '@/lib/validations/auth';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { SketchInput } from '@/components/ui/sketch-input';
 import { SketchButton } from '@/components/ui/sketch-button';
-import { WarningDoodle } from '@/components/shared/sketch-doodles';
+import { WarningDoodle, SketchLine } from '@/components/shared/sketch-doodles';
 
 export const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -196,9 +196,9 @@ export const LoginForm: React.FC = () => {
 
       {/* Hand-Drawn Styled Divider: — or continue with — */}
       <div className="my-4 flex w-full items-center gap-2 select-none">
-        <span className="bg-ink/40 h-[1.5px] flex-1 rounded-full" />
-        <span className="font-sketch text-ink text-xs font-bold whitespace-nowrap">or continue with</span>
-        <span className="bg-ink/40 h-[1.5px] flex-1 rounded-full" />
+        <SketchLine className="flex-1" />
+        <span className="font-sketch text-ink text-xs font-bold whitespace-nowrap px-1">or continue with</span>
+        <SketchLine className="flex-1 -scale-x-100" />
       </div>
 
       {/* OAuth Social Buttons: [ Google ] [ Apple ] */}
