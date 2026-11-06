@@ -1,5 +1,5 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import { randomUUID } from 'node:crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 // -----------------------------------------------------------------------------
 // S3 Client Configuration
@@ -76,7 +76,7 @@ export function getFileExtension(filename: string): string {
 
 export function generateS3Key(userId: string, filename: string): string {
   const ext = getFileExtension(filename);
-  const id = randomUUID();
+  const id = uuidv4();
   return `pins/${userId}/${id}.${ext}`;
 }
 
