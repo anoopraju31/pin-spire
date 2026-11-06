@@ -15,21 +15,17 @@ User authentication and session management are handled by **Clerk** (`@clerk/nex
 
 ---
 
-## 2. Route Protection & Proxy (`proxy.ts`)
+## 2. Route Protection & Proxy (`proxy.ts` & Layout Protection)
 
-> **Next.js 16 Convention**: Starting with Next.js 16, `middleware.ts` is deprecated and renamed to `proxy.ts` to clarify its role at the network boundary.
+> **Next.js 16 & Clerk v7 Modern Security Model**:
+> 1. Next.js 16 renamed `middleware.ts` to `proxy.ts`.
+> 2. Clerk deprecated `createRouteMatcher()` in favor of **resource-based protection** (`auth.protect()`), which avoids URL-divergence issues and ensures Server Actions & App Router components are protected directly at the layout/data boundary.
 
+### `proxy.ts`
 ```typescript
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { clerkMiddleware } from '@clerk/nextjs/server';
 
-const isPublicRoute = createRouteMatcher(['/', '/register(.*)', '/api/webhooks(.*)']);
-
-export const proxy = clerkMiddleware(async (auth, request) => {
-  if (!isPublicRoute(request)) {
-    await auth.protect();
-  }
-});
-
+export const proxy = clerkMiddleware();
 export default proxy;
 
 export const config = {
@@ -38,8 +34,21 @@ export const config = {
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
     // Always run for API routes
     '/(api|trpc)(.*)',
+    // Always run for Clerk-specific frontend API routes
+    '/__clerk/(.*)',
   ],
 };
+```
+
+### Resource Protection (`app/(dashboard)/layout.tsx`)
+```typescript
+import type { ReactNode } from 'react';
+import { auth } from '@clerk/nextjs/server';
+
+export default async function DashboardLayout({ children }: { children: ReactNode }) {
+  await auth.protect();
+  return <>{children}</>;
+}
 ```
 
 ---
