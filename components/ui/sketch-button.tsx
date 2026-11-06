@@ -4,8 +4,7 @@ import { cn } from '@/lib/utils';
 export type SketchButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost';
 export type SketchButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
-export interface SketchButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface SketchButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: SketchButtonVariant;
   size?: SketchButtonSize;
   loading?: boolean;
@@ -30,28 +29,17 @@ const sizeStyles: Record<SketchButtonSize, string> = {
 };
 
 export const SketchButton = React.forwardRef<HTMLButtonElement, SketchButtonProps>(
-  (
-    {
-      className,
-      variant = 'primary',
-      size = 'md',
-      loading = false,
-      disabled,
-      children,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, variant = 'primary', size = 'md', loading = false, disabled, children, ...props }, ref) => {
     return (
       <button
         ref={ref}
         disabled={disabled || loading}
         className={cn(
-          'inline-flex items-center justify-center gap-2 select-none cursor-pointer transition-all duration-150',
-          'disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0',
+          'inline-flex cursor-pointer items-center justify-center gap-2 transition-all duration-150 select-none',
+          'disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none',
           variantStyles[variant],
           sizeStyles[size],
-          className
+          className,
         )}
         {...props}
       >
@@ -63,14 +51,7 @@ export const SketchButton = React.forwardRef<HTMLButtonElement, SketchButtonProp
             viewBox="0 0 24 24"
             aria-hidden="true"
           >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path
               className="opacity-75"
               fill="currentColor"
@@ -81,7 +62,7 @@ export const SketchButton = React.forwardRef<HTMLButtonElement, SketchButtonProp
         {children}
       </button>
     );
-  }
+  },
 );
 
 SketchButton.displayName = 'SketchButton';
