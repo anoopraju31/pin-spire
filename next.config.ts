@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   cacheComponents: false,
   experimental: {
     agentFeedback: true,
+    cpus: 1,
   },
 };
 

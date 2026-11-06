@@ -78,7 +78,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - Match mockup `login.png` using `<Form>` + Clerk `useSignIn()`.
   - _Verify_: Submits credentials, displays validation errors, redirects to `/posts`.
   - _Commit_: `feat(auth): implement custom sketchbook login page`.
-- [ ] **Sub-step 4.5**: Build Register Page at `app/(auth)/register/page.tsx`.
+- [x] **Sub-step 4.5**: Build Register Page at `app/(auth)/register/page.tsx`.
   - Match mockup `register.png` using `<Form>` + Clerk `useSignUp()`.
   - _Verify_: Validates matching passwords & terms checkbox, registers user in Clerk.
   - _Commit_: `feat(auth): implement custom sketchbook registration page`.

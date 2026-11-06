@@ -8,14 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useSignIn } from '@clerk/nextjs/legacy';
 
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { SketchInput } from '@/components/ui/sketch-input';
 import { SketchButton } from '@/components/ui/sketch-button';
 
@@ -36,7 +29,7 @@ export const LoginForm: React.FC = () => {
   });
 
   const onSubmit = async (values: LoginInput) => {
-    if (!isLoaded) return;
+    if (!isLoaded || !signIn) return;
     setIsLoading(true);
     setAuthError(null);
 
@@ -50,17 +43,12 @@ export const LoginForm: React.FC = () => {
         await setActive({ session: result.createdSessionId });
         router.push('/posts');
       } else {
-        // Fallback for multi-factor or incomplete sign in
         router.push('/posts');
       }
     } catch (err: unknown) {
-      const clerkError =
-        (err as { errors?: Array<{ longMessage?: string; message?: string }> })
-          ?.errors?.[0];
+      const clerkError = (err as { errors?: Array<{ longMessage?: string; message?: string }> })?.errors?.[0];
       const message =
-        clerkError?.longMessage ||
-        clerkError?.message ||
-        'Invalid username/email or password. Please try again.';
+        clerkError?.longMessage || clerkError?.message || 'Invalid username/email or password. Please try again.';
       setAuthError(message);
     } finally {
       setIsLoading(false);
@@ -68,7 +56,7 @@ export const LoginForm: React.FC = () => {
   };
 
   const handleOAuth = (strategy: 'oauth_google' | 'oauth_apple') => {
-    if (!isLoaded) return;
+    if (!isLoaded || !signIn) return;
     signIn.authenticateWithRedirect({
       strategy,
       redirectUrl: '/sso-callback',
@@ -77,51 +65,54 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full rounded-3xl border-sketch bg-surface p-6 shadow-sketch sm:p-8 lg:p-10">
-      {/* Pushpin Badge */}
-      <div className="absolute -top-4 right-8 select-none text-2xl" aria-hidden="true">
-        📌
+    <div className="flex w-full max-w-[340px] flex-col items-center sm:max-w-[360px]">
+      {/* Top Branding (Desktop & Tablet/Mobile) */}
+      <div className="mb-1 text-center">
+        {/* Mobile/Tablet Circular Badge (hidden on desktop if left panel visible) */}
+        <div className="mb-2 flex items-center justify-center gap-2 lg:hidden">
+          <div className="bg-brand-primary border-ink flex h-9 w-9 items-center justify-center rounded-full border-2 text-base text-white shadow-[1px_2px_0px_#2B2523]">
+            ✏️
+          </div>
+          <span className="font-display text-brand-primary text-3xl font-black tracking-wider">PIN-SPIRE</span>
+        </div>
+
+        {/* Desktop Brand Header */}
+        <div className="hidden lg:block">
+          <h1 className="font-display text-brand-primary text-4xl font-black tracking-wider">PIN-SPIRE</h1>
+          <p className="font-sketch text-ink mt-0.5 text-base font-semibold tracking-wide">
+            your space to find &amp; save ideas
+          </p>
+        </div>
       </div>
 
-      {/* Form Header */}
-      <div className="mb-6 space-y-1">
-        <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary">
-          <span>✏️</span>
-          <span>welcome back to pin-spire</span>
-        </div>
-        <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-          sign in to your board
-        </h1>
-        <p className="text-xs text-ink-muted sm:text-sm">
-          enter your credentials to access your saved pins & sketches.
-        </p>
-      </div>
+      {/* Greeting Title */}
+      <h2 className="font-sketch text-ink mt-3 mb-4 text-center text-2xl font-extrabold sm:text-3xl">Welcome back!</h2>
 
       {/* Global Auth Error Alert */}
       {authError && (
         <div
           role="alert"
-          className="mb-6 flex items-start gap-2 rounded-xl border-sketch border-error bg-error/10 p-3 text-xs font-medium text-error"
+          className="border-error bg-error/10 text-error mb-4 flex w-full items-center gap-2 rounded-xl border-2 p-2.5 text-xs font-semibold"
         >
-          <span className="text-sm">⚠️</span>
+          <span>⚠️</span>
           <span>{authError}</span>
         </div>
       )}
 
       {/* Compound Form */}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* Identifier Field (Email or Username) */}
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-3.5">
+          {/* Username or Email Field */}
           <FormField
             control={form.control}
             name="identifier"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username or Email</FormLabel>
+              <FormItem className="space-y-0.5">
+                <FormLabel className="sr-only">Username or Email</FormLabel>
                 <FormControl>
                   <SketchInput
                     {...field}
-                    placeholder="e.g. artist or artist@pinspire.com"
+                    placeholder="Username or Email"
                     autoComplete="username"
                     disabled={isLoading}
                   />
@@ -136,28 +127,20 @@ export const LoginForm: React.FC = () => {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
-                <div className="flex items-center justify-between">
-                  <FormLabel>Password</FormLabel>
-                  <Link
-                    href="/forget-password"
-                    className="text-xs font-medium text-brand-primary underline hover:text-brand-hover"
-                  >
-                    Forgot password?
-                  </Link>
-                </div>
+              <FormItem className="space-y-0.5">
+                <FormLabel className="sr-only">Password</FormLabel>
                 <FormControl>
                   <SketchInput
                     {...field}
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
+                    placeholder="Password"
                     autoComplete="current-password"
                     disabled={isLoading}
                     endIcon={
                       <button
                         type="button"
                         onClick={() => setShowPassword((prev) => !prev)}
-                        className="cursor-pointer text-xs font-medium text-ink-muted hover:text-ink"
+                        className="text-ink-muted hover:text-ink cursor-pointer px-1 text-xs font-bold"
                         tabIndex={-1}
                       >
                         {showPassword ? 'hide' : 'show'}
@@ -170,14 +153,21 @@ export const LoginForm: React.FC = () => {
             )}
           />
 
-          {/* Submit Button */}
-          <div className="pt-2">
+          {/* Forgot your password? Link */}
+          <div className="pt-0.5 text-center">
+            <Link href="/forget-password" className="font-sketch text-ink text-xs font-semibold hover:underline">
+              Forgot your password?
+            </Link>
+          </div>
+
+          {/* Log In Button */}
+          <div className="pt-1">
             <SketchButton
               type="submit"
               variant="primary"
               size="lg"
               loading={isLoading}
-              className="w-full"
+              className="font-sketch w-full py-2.5 text-base font-bold"
             >
               Log In
             </SketchButton>
@@ -185,24 +175,21 @@ export const LoginForm: React.FC = () => {
         </form>
       </Form>
 
-      {/* Hand-Drawn Styled Divider */}
-      <div className="relative my-6 flex items-center justify-center">
-        <div className="w-full border-t border-dashed border-ink/20" />
-        <span className="absolute bg-surface px-3 text-xs font-medium text-ink-muted">
-          or sketch with
-        </span>
+      {/* Hand-Drawn Styled Divider: — or continue with — */}
+      <div className="my-4 flex w-full items-center gap-2 select-none">
+        <span className="bg-ink/40 h-[1.5px] flex-1 rounded-full" />
+        <span className="font-sketch text-ink text-xs font-bold whitespace-nowrap">or continue with</span>
+        <span className="bg-ink/40 h-[1.5px] flex-1 rounded-full" />
       </div>
 
-      {/* OAuth Social Buttons */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* OAuth Social Buttons: [ Google ] [ Apple ] */}
+      <div className="grid w-full grid-cols-2 gap-3">
         {/* Google OAuth Button */}
-        <SketchButton
+        <button
           type="button"
-          variant="secondary"
-          size="md"
           disabled={isLoading}
           onClick={() => handleOAuth('oauth_google')}
-          className="flex items-center justify-center gap-2"
+          className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[14px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -223,32 +210,27 @@ export const LoginForm: React.FC = () => {
             />
           </svg>
           <span>Google</span>
-        </SketchButton>
+        </button>
 
         {/* Apple OAuth Button */}
-        <SketchButton
+        <button
           type="button"
-          variant="secondary"
-          size="md"
           disabled={isLoading}
           onClick={() => handleOAuth('oauth_apple')}
-          className="flex items-center justify-center gap-2"
+          className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[14px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50"
         >
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.38c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.64 1.35-.58.65-1.09 1.72-.95 2.74 1 .08 2.04-.51 2.67-1.24z" />
           </svg>
           <span>Apple</span>
-        </SketchButton>
+        </button>
       </div>
 
       {/* Switch to Registration Link */}
-      <div className="mt-8 text-center text-xs text-ink-muted sm:text-sm">
-        <span>don&apos;t have an account yet? </span>
-        <Link
-          href="/register"
-          className="font-bold text-brand-primary underline hover:text-brand-hover"
-        >
-          create your sketchbook
+      <div className="font-sketch text-ink mt-5 text-center text-sm font-semibold">
+        <span>New here? </span>
+        <Link href="/register" className="hover:text-brand-primary font-bold underline">
+          Sign up!
         </Link>
       </div>
     </div>

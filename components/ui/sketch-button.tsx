@@ -12,20 +12,19 @@ export interface SketchButtonProps extends React.ButtonHTMLAttributes<HTMLButton
 
 const variantStyles: Record<SketchButtonVariant, string> = {
   primary:
-    'bg-brand-primary text-white border-sketch shadow-sketch hover:bg-brand-hover active:shadow-sketch-pressed active:translate-x-[1px] active:translate-y-[1px]',
+    'bg-brand-primary text-white border-2 border-ink shadow-[2px_3px_0px_#2B2523] hover:bg-brand-hover active:shadow-[1px_1px_0px_#2B2523] active:translate-x-[1px] active:translate-y-[1px]',
   secondary:
-    'bg-surface text-ink border-sketch shadow-sketch hover:bg-surface-tint active:shadow-sketch-pressed active:translate-x-[1px] active:translate-y-[1px]',
+    'bg-white text-ink border-2 border-ink shadow-[1px_2px_0px_#2B2523] hover:bg-surface-tint active:shadow-none active:translate-x-[1px] active:translate-y-[1px]',
   outline:
-    'bg-transparent text-ink border-sketch shadow-sketch hover:bg-surface-tint active:shadow-sketch-pressed active:translate-x-[1px] active:translate-y-[1px]',
-  ghost:
-    'bg-transparent text-ink hover:bg-surface-tint/60 active:bg-surface-tint active:translate-x-[1px] active:translate-y-[1px]',
+    'bg-transparent text-ink border-2 border-ink hover:bg-surface-tint active:translate-x-[1px] active:translate-y-[1px]',
+  ghost: 'bg-transparent text-ink hover:bg-surface-tint/60 active:bg-surface-tint',
 };
 
 const sizeStyles: Record<SketchButtonSize, string> = {
   sm: 'px-3 py-1.5 text-xs rounded-lg font-medium',
-  md: 'px-5 py-2.5 text-sm rounded-xl font-semibold',
-  lg: 'px-6 py-3 text-base rounded-xl font-semibold',
-  icon: 'p-2.5 rounded-xl flex items-center justify-center',
+  md: 'px-4 py-2 text-xs font-bold rounded-[14px]',
+  lg: 'px-6 py-2.5 text-base font-bold rounded-[18px]',
+  icon: 'p-2.5 rounded-[14px] flex items-center justify-center',
 };
 
 export const SketchButton = React.forwardRef<HTMLButtonElement, SketchButtonProps>(

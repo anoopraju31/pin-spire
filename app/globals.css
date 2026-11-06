@@ -1,19 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&family=Shantell+Sans:ital,wght@0,600;0,800;1,700&display=swap');
 @import 'tailwindcss';
 
 @theme {
-  --color-canvas: #FAF7F2;
-  --color-surface: #FFFFFF;
-  --color-surface-tint: #F4EFEB;
-  --color-brand-primary: #D95328;
-  --color-brand-hover: #BF431C;
-  --color-ink: #2B2523;
-  --color-ink-muted: #7A726D;
-  --color-accent-pin: #C84B22;
-  --color-error: #D32F2F;
+  --color-canvas: #faf7f2;
+  --color-surface: #ffffff;
+  --color-surface-tint: #f4efeb;
+  --color-brand-primary: #d95328;
+  --color-brand-hover: #bf431c;
+  --color-ink: #2b2523;
+  --color-ink-muted: #7a726d;
+  --color-accent-pin: #c84b22;
+  --color-error: #d32f2f;
 
-  --shadow-sketch: 2px 3px 0px #2B2523;
-  --shadow-sketch-pressed: 1px 2px 0px #2B2523;
-  --shadow-sketch-hover: 3px 4px 0px #2B2523;
+  --shadow-sketch: 2px 3px 0px #2b2523;
+  --shadow-sketch-pressed: 1px 2px 0px #2b2523;
+  --shadow-sketch-hover: 3px 4px 0px #2b2523;
+}
+
+@utility font-sketch {
+  font-family: 'Patrick Hand', 'Caveat', 'Comic Neue', 'Chalkboard SE', 'Comic Sans MS', cursive, sans-serif;
+}
+
+@utility font-display {
+  font-family: 'Shantell Sans', 'Patrick Hand', 'Comic Neue', 'Chalkboard SE', 'Comic Sans MS', cursive, sans-serif;
 }
 
 @utility border-sketch {
