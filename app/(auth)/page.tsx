@@ -53,7 +53,7 @@ export default async function LoginPage() {
       </div>
 
       {/* Main Open Sketchbook Dual-Spread (Desktop) / Centered Column (Mobile/Tablet) */}
-      <div className="relative flex min-h-screen w-full max-w-6xl flex-col items-center justify-center p-6 sm:p-10 lg:min-h-[640px] lg:flex-row lg:p-12">
+      <div className="relative flex min-h-screen w-full max-w-6xl flex-col items-center justify-center p-6 sm:p-10 lg:min-h-160 lg:flex-row lg:p-12">
         {/* Left Page: Polaroid Collage Spread (Desktop) */}
         <div className="hidden h-full w-1/2 flex-col items-center justify-center pr-8 lg:flex lg:pr-12">
           <PolaroidCollage mode="login" />
