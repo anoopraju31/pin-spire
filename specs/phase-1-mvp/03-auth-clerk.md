@@ -82,6 +82,6 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/posts"
   - [x] **Sub-step 4.1**: Install form dependencies & implement compound `<Form>` components
   - [x] **Sub-step 4.2**: Install `@clerk/nextjs` & configure route protection in `proxy.ts` (Next.js 16 Proxy convention)
   - [x] **Sub-step 4.3**: Build reusable Sketchbook UI elements (`SketchInput`, `SketchButton`, `PolaroidCollage`)
-  - [ ] **Sub-step 4.4**: Build custom Sketchbook Login Page (`app/(auth)/page.tsx`)
-  - [ ] **Sub-step 4.5**: Build custom Sketchbook Registration Page (`app/(auth)/register/page.tsx`)
+  - [x] **Sub-step 4.4**: Build custom Sketchbook Login Page (`app/(auth)/page.tsx`)
+  - [x] **Sub-step 4.5**: Build custom Sketchbook Registration Page (`app/(auth)/register/page.tsx`)
   - [ ] **Sub-step 4.6**: Implement user database synchronization to PostgreSQL `users` table
