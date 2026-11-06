@@ -108,23 +108,21 @@ export const RegisterForm: React.FC = () => {
     setIsLoading(true);
     setAuthError(null);
     try {
-      if (signIn) {
-        await signIn.authenticateWithRedirect({
+      if (signUp) {
+        await signUp.authenticateWithRedirect({
           strategy,
           redirectUrl: '/sso-callback',
           redirectUrlComplete: '/posts',
         });
-      } else if (signUp) {
-        await signUp.authenticateWithRedirect({
+      } else if (signIn) {
+        await signIn.authenticateWithRedirect({
           strategy,
           redirectUrl: '/sso-callback',
           redirectUrlComplete: '/posts',
         });
       }
     } catch (err: unknown) {
-      const clerkError =
-        (err as { errors?: Array<{ longMessage?: string; message?: string }> })
-          ?.errors?.[0];
+      const clerkError = (err as { errors?: Array<{ longMessage?: string; message?: string }> })?.errors?.[0];
       const message =
         clerkError?.longMessage ||
         clerkError?.message ||
@@ -369,14 +367,14 @@ export const RegisterForm: React.FC = () => {
           </div>
 
           {/* Clerk CAPTCHA container for challenge verification */}
-          <div id="clerk-captcha" className="w-full flex justify-center empty:hidden" />
+          <div id="clerk-captcha" className="flex w-full justify-center empty:hidden" />
         </form>
       </Form>
 
       {/* Hand-Drawn Styled Divider: — or sign up with — */}
       <div className="my-3.5 flex w-full items-center gap-2 select-none">
         <SketchLine className="flex-1" />
-        <span className="font-sketch text-ink text-xs font-bold whitespace-nowrap px-1">or sign up with</span>
+        <span className="font-sketch text-ink px-1 text-xs font-bold whitespace-nowrap">or sign up with</span>
         <SketchLine className="flex-1 -scale-x-100" />
       </div>
 

@@ -13,23 +13,22 @@ export async function syncCurrentUser() {
   if (!email) return null;
 
   const fullName =
-    [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ') ||
-    clerkUser.username ||
-    'Creative Maker';
+    [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(' ') || clerkUser.username || 'Creative Maker';
 
-  const baseUsername =
-    clerkUser.username ||
-    email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '_');
+  const baseUsername = clerkUser.username || email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '_');
 
-  // Check if user already exists by clerkId
-  const existingUser = await prisma.user.findUnique({
-    where: { clerkId: clerkUser.id },
+  // Check if user already exists by clerkId or email
+  const existingUser = await prisma.user.findFirst({
+    where: {
+      OR: [{ clerkId: clerkUser.id }, { email }],
+    },
   });
 
   if (existingUser) {
     return await prisma.user.update({
-      where: { clerkId: clerkUser.id },
+      where: { id: existingUser.id },
       data: {
+        clerkId: clerkUser.id,
         fullName,
         email,
         profileImg: clerkUser.imageUrl,
