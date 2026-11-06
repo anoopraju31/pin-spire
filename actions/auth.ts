@@ -58,7 +58,7 @@ export async function registerAction(input: RegisterInput): Promise<AuthActionRe
         email: normalizedEmail,
         username,
         passwordHash,
-      },
+      } as any,
     });
 
     // Create cookie session
