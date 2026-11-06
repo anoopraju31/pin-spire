@@ -64,7 +64,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - Implement Zod schemas in `lib/validations/auth.ts` and `lib/validations/post.ts`.
   - _Verify_: Typecheck passes.
   - _Commit_: `feat(ui): implement compound form components and zod schemas`.
-- [ ] **Sub-step 4.2**: Install `@clerk/nextjs` and configure Clerk middleware in `middleware.ts`.
+- [x] **Sub-step 4.2**: Install `@clerk/nextjs` and configure Clerk middleware in `middleware.ts`.
   - Define public routes (`/`, `/register`) and protected routes (`/posts(.*)`).
   - _Verify_: Unauthenticated requests to `/posts` are intercepted.
   - _Commit_: `feat(auth): configure clerk middleware and route protection`.

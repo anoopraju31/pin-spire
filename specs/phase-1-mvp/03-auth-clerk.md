@@ -66,8 +66,8 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/posts"
 ## 5. Step 4 Execution & Tracking Checklist
 
 - [ ] **Step 4: UI Form Core & Clerk Authentication (`/` & `/register`)**
-  - [ ] **Sub-step 4.1**: Install form dependencies & implement compound `<Form>` components
-  - [ ] **Sub-step 4.2**: Install `@clerk/nextjs` & configure route protection middleware in `middleware.ts`
+  - [x] **Sub-step 4.1**: Install form dependencies & implement compound `<Form>` components
+  - [x] **Sub-step 4.2**: Install `@clerk/nextjs` & configure route protection middleware in `middleware.ts`
   - [ ] **Sub-step 4.3**: Build reusable Sketchbook UI elements (`SketchInput`, `SketchButton`, `PolaroidCollage`)
   - [ ] **Sub-step 4.4**: Build custom Sketchbook Login Page (`app/(auth)/page.tsx`)
   - [ ] **Sub-step 4.5**: Build custom Sketchbook Registration Page (`app/(auth)/register/page.tsx`)

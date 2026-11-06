@@ -86,7 +86,7 @@ Track overall Phase 1 progress. Mark sub-steps as `[x]` upon verification and co
 
 - [ ] **Step 4: UI Form Core & Clerk Authentication (`/` & `/register`)**
   - [x] Sub-step 4.1: Install form dependencies & implement compound `<Form>` components
-  - [ ] Sub-step 4.2: Install `@clerk/nextjs` & configure route protection middleware
+  - [x] Sub-step 4.2: Install `@clerk/nextjs` & configure route protection middleware
   - [ ] Sub-step 4.3: Build reusable Sketchbook UI elements (inputs, buttons, polaroid collage)
   - [ ] Sub-step 4.4: Build custom Sketchbook Login Page (`app/(auth)/page.tsx`)
   - [ ] Sub-step 4.5: Build custom Sketchbook Registration Page (`app/(auth)/register/page.tsx`)
