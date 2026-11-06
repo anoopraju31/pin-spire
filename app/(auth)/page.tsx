@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { auth } from '@clerk/nextjs/server';
+import { getSession } from '@/lib/auth/session';
 import { PolaroidCollage } from '@/components/shared/polaroid-collage';
 import { LoginForm } from '@/components/pages/auth/login-form';
 import { SketchCoffeeStain } from '@/components/shared/sketch-coffee-stain';
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
 };
 
 export default async function LoginPage() {
-  const { userId } = await auth();
-  if (userId) {
+  const session = await getSession();
+  if (session?.userId) {
     redirect('/posts');
   }
 

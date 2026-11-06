@@ -1,14 +1,12 @@
 import type { ReactNode } from 'react';
-import { auth } from '@clerk/nextjs/server';
-import { syncCurrentUser } from '@/lib/auth/sync-user';
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/auth/session';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  await auth.protect();
+  const session = await getSession();
 
-  try {
-    await syncCurrentUser();
-  } catch (err) {
-    console.error('Failed to sync user to database:', err);
+  if (!session?.userId) {
+    redirect('/');
   }
 
   return <>{children}</>;

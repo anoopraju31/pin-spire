@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { UserButton } from '@clerk/nextjs';
-import { currentUser } from '@clerk/nextjs/server';
+import { getCurrentUser } from '@/lib/auth/session';
+import { logoutAction } from '@/actions/auth';
 
 export const metadata: Metadata = {
   title: 'Posts Feed',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function PostsFeedPage() {
-  const user = await currentUser();
+  const user = await getCurrentUser();
 
   return (
     <div className="bg-canvas flex min-h-screen w-full flex-col">
@@ -28,7 +28,26 @@ export default async function PostsFeedPage() {
             >
               + Create Pin
             </Link>
-            <UserButton />
+
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <div className="border-ink bg-canvas font-sketch text-ink flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-bold">
+                  {user?.fullName?.[0]?.toUpperCase() || user?.username?.[0]?.toUpperCase() || 'M'}
+                </div>
+                <span className="font-sketch text-ink hidden text-xs font-bold sm:inline">
+                  {user?.fullName || user?.username}
+                </span>
+              </div>
+
+              <form action={logoutAction}>
+                <button
+                  type="submit"
+                  className="font-sketch text-ink/60 hover:text-brand-primary cursor-pointer text-xs font-bold underline transition-colors"
+                >
+                  Log out
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </header>
@@ -40,11 +59,8 @@ export default async function PostsFeedPage() {
 
           <h1 className="font-sketch text-ink mt-2 text-2xl font-extrabold sm:text-3xl">Welcome to Pin-Spire!</h1>
           <p className="font-sketch text-ink-muted mt-2 text-sm">
-            Hello,{' '}
-            <span className="text-ink font-bold">
-              {user?.firstName || user?.emailAddresses?.[0]?.emailAddress || 'Maker'}
-            </span>
-            ! You are successfully signed in to your sketchbook.
+            Hello, <span className="text-ink font-bold">{user?.fullName || user?.username || 'Maker'}</span>! You are
+            successfully signed in to your sketchbook.
           </p>
 
           <div className="border-ink/20 mt-6 flex flex-col justify-center gap-3 border-t-2 border-dashed pt-4 sm:flex-row">

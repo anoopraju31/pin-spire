@@ -2,21 +2,17 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSignIn } from '@clerk/nextjs/legacy';
 
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
+import { loginAction } from '@/actions/auth';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { SketchInput } from '@/components/ui/sketch-input';
 import { SketchButton } from '@/components/ui/sketch-button';
 import { WarningDoodle, SketchLine } from '@/components/shared/sketch-doodles';
 
 export const LoginForm: React.FC = () => {
-  const router = useRouter();
-  const { isLoaded, signIn, setActive } = useSignIn();
-
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -30,69 +26,35 @@ export const LoginForm: React.FC = () => {
   });
 
   const onSubmit = async (values: LoginInput) => {
-    if (!isLoaded || !signIn) return;
     setIsLoading(true);
     setAuthError(null);
 
     try {
-      const result = await signIn.create({
-        identifier: values.identifier,
-        password: values.password,
-      });
-
-      if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId });
+      const result = await loginAction(values);
+      if (result.success) {
         window.location.href = '/posts';
       } else {
-        window.location.href = '/posts';
+        setAuthError(result.error || 'Invalid username/email or password.');
       }
     } catch (err: unknown) {
-      const clerkError = (err as { errors?: Array<{ code?: string; longMessage?: string; message?: string }> })
-        ?.errors?.[0];
-      if (clerkError?.code === 'session_exists' || clerkError?.message?.toLowerCase().includes('already signed in')) {
-        window.location.href = '/posts';
-        return;
-      }
-      const message =
-        clerkError?.longMessage || clerkError?.message || 'Invalid username/email or password. Please try again.';
-      setAuthError(message);
+      console.error('Login error:', err);
+      setAuthError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleOAuth = async (strategy: 'oauth_google' | 'oauth_apple') => {
-    if (!isLoaded || !signIn) return;
-    setIsLoading(true);
-    setAuthError(null);
-    try {
-      await signIn.authenticateWithRedirect({
-        strategy,
-        redirectUrl: '/sso-callback',
-        redirectUrlComplete: '/posts',
-      });
-    } catch (err: unknown) {
-      const clerkError = (err as { errors?: Array<{ code?: string; longMessage?: string; message?: string }> })
-        ?.errors?.[0];
-      if (clerkError?.code === 'session_exists' || clerkError?.message?.toLowerCase().includes('already signed in')) {
-        window.location.href = '/posts';
-        return;
-      }
-      const message =
-        clerkError?.longMessage ||
-        clerkError?.message ||
-        'OAuth authentication failed. If in development, disable Bot Detection in your Clerk Dashboard under Attack Protection.';
-      setAuthError(message);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleOAuth = (provider: string) => {
+    setAuthError(
+      `${provider} login will be connected via custom OAuth. Please sign in with username/email & password.`,
+    );
   };
 
   return (
     <div className="flex w-full max-w-[340px] flex-col items-center sm:max-w-[360px]">
       {/* Top Branding (Desktop & Tablet/Mobile) */}
       <div className="mb-1 text-center">
-        {/* Mobile/Tablet Circular Badge (hidden on desktop if left panel visible) */}
+        {/* Mobile/Tablet Circular Badge */}
         <div className="mb-2 flex items-center justify-center gap-2 lg:hidden">
           <div className="bg-brand-primary border-ink flex h-9 w-9 items-center justify-center rounded-full border-2 text-base text-white shadow-[1px_2px_0px_#2B2523]">
             ✏️
@@ -196,9 +158,6 @@ export const LoginForm: React.FC = () => {
               Log In
             </SketchButton>
           </div>
-
-          {/* Clerk CAPTCHA container for challenge verification */}
-          <div id="clerk-captcha" className="flex w-full justify-center empty:hidden" />
         </form>
       </Form>
 
@@ -211,11 +170,11 @@ export const LoginForm: React.FC = () => {
 
       {/* OAuth Social Buttons: [ Google ] [ Apple ] */}
       <div className="grid w-full grid-cols-2 gap-3">
-        {/* Google OAuth Button */}
+        {/* Google Button */}
         <button
           type="button"
           disabled={isLoading}
-          onClick={() => handleOAuth('oauth_google')}
+          onClick={() => handleOAuth('Google')}
           className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[255px_15px_225px_15px/15px_225px_15px_255px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
@@ -239,11 +198,11 @@ export const LoginForm: React.FC = () => {
           <span>Google</span>
         </button>
 
-        {/* Apple OAuth Button */}
+        {/* Apple Button */}
         <button
           type="button"
           disabled={isLoading}
-          onClick={() => handleOAuth('oauth_apple')}
+          onClick={() => handleOAuth('Apple')}
           className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[255px_15px_225px_15px/15px_225px_15px_255px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50"
         >
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">

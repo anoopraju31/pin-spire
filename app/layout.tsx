@@ -1,6 +1,5 @@
+import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { ClerkProvider } from '@clerk/nextjs';
-
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -11,14 +10,12 @@ export const metadata: Metadata = {
   description: 'A cozy hand-drawn sketchbook community to find, pin, and share creative ideas.',
 };
 
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="h-full">
-        <body className="flex min-h-full flex-col bg-canvas text-ink antialiased selection:bg-brand-primary selection:text-white">
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" className="h-full">
+      <body className="bg-canvas text-ink selection:bg-brand-primary flex min-h-full flex-col antialiased selection:text-white">
+        {children}
+      </body>
+    </html>
   );
 }
