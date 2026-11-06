@@ -53,7 +53,7 @@ export default function LoginPage() {
         </div>
 
         {/* Center Sketchbook Crease / Spine (Desktop) */}
-        <div className="bg-ink/15 hidden h-[520px] w-[1.5px] self-center rounded-full shadow-[0_0_6px_rgba(43,37,35,0.06)] lg:block" />
+        {/* <div className="bg-ink/15 hidden h-[520px] w-[1.5px] self-center rounded-full shadow-[0_0_6px_rgba(43,37,35,0.06)] lg:block" /> */}
 
         {/* Right Page: Authentication Form (Desktop, Tablet, Mobile) */}
         <div className="flex h-full w-full flex-col items-center justify-center py-6 pl-0 lg:w-1/2 lg:pl-12">

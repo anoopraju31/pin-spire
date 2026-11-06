@@ -21,10 +21,10 @@ const variantStyles: Record<SketchButtonVariant, string> = {
 };
 
 const sizeStyles: Record<SketchButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-xs rounded-lg font-medium',
-  md: 'px-4 py-2 text-xs font-bold rounded-[14px]',
-  lg: 'px-6 py-2.5 text-base font-bold rounded-[18px]',
-  icon: 'p-2.5 rounded-[14px] flex items-center justify-center',
+  sm: 'px-3 py-1.5 text-xs font-medium',
+  md: 'px-4 py-2 text-xs font-bold',
+  lg: 'px-6 py-2.5 text-base font-bold',
+  icon: 'p-2.5 flex items-center justify-center',
 };
 
 export const SketchButton = React.forwardRef<HTMLButtonElement, SketchButtonProps>(
@@ -34,7 +34,7 @@ export const SketchButton = React.forwardRef<HTMLButtonElement, SketchButtonProp
         ref={ref}
         disabled={disabled || loading}
         className={cn(
-          'inline-flex cursor-pointer items-center justify-center gap-2 transition-all duration-150 select-none',
+          'inline-flex cursor-pointer items-center justify-center gap-2 rounded-[255px_15px_225px_15px/15px_225px_15px_255px] transition-all duration-150 select-none',
           'disabled:translate-x-0 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none',
           variantStyles[variant],
           sizeStyles[size],

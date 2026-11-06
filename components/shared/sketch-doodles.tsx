@@ -238,3 +238,43 @@ export const TapeDoodle: React.FC<{
     <path d="M47 2 L49 6 L46 10 L48 14 L46 17" stroke="#2B2523" strokeWidth="0.8" opacity="0.4" />
   </svg>
 );
+
+export const WarningDoodle: React.FC<{
+  className?: string;
+  size?: number;
+  color?: string;
+}> = ({ className, size = 18, color = '#D32F2F' }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={cn('shrink-0 select-none pointer-events-none', className)}
+    aria-hidden="true"
+  >
+    {/* Hand-drawn sketchy warning triangle */}
+    <path
+      d="M10.8 3.5 C11.3 2.5 12.7 2.5 13.2 3.5 L21.6 18.2 C22.1 19.1 21.4 20.3 20.4 20.3 L3.6 20.3 C2.6 20.3 1.9 19.1 2.4 18.2 L10.8 3.5 Z"
+      fill={`${color}18`}
+      stroke={color}
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    {/* Hand-drawn exclamation stem */}
+    <path
+      d="M12 8.5 L12 13.5"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
+    {/* Hand-drawn exclamation dot */}
+    <circle
+      cx="12"
+      cy="16.8"
+      r="1.1"
+      fill={color}
+    />
+  </svg>
+);
