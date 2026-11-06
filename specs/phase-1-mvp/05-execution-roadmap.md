@@ -68,7 +68,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - Define public routes (`/`, `/register`) and protected routes (`/posts(.*)`).
   - _Verify_: Unauthenticated requests to `/posts` are intercepted.
   - _Commit_: `feat(auth): configure clerk proxy and route protection`.
-- [ ] **Sub-step 4.3**: Build reusable Sketchbook UI elements:
+- [x] **Sub-step 4.3**: Build reusable Sketchbook UI elements:
   - `components/ui/sketch-input.tsx` (sketchy pencil border input).
   - `components/ui/sketch-button.tsx` (terracotta primary and draft buttons).
   - `components/shared/polaroid-collage.tsx` (hand-drawn illustrations from mockups).
