@@ -74,7 +74,7 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - `components/shared/polaroid-collage.tsx` (hand-drawn illustrations from mockups).
   - _Verify_: Components render in isolation.
   - _Commit_: `feat(ui): build sketchbook inputs, buttons, and polaroid collage`.
-- [ ] **Sub-step 4.4**: Build Login Page at `app/(auth)/page.tsx`.
+- [x] **Sub-step 4.4**: Build Login Page at `app/(auth)/page.tsx`.
   - Match mockup `login.png` using `<Form>` + Clerk `useSignIn()`.
   - _Verify_: Submits credentials, displays validation errors, redirects to `/posts`.
   - _Commit_: `feat(auth): implement custom sketchbook login page`.
