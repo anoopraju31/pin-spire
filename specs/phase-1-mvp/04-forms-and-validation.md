@@ -170,7 +170,7 @@ export type LoginInput = z.infer<typeof loginSchema>;
 export const registerSchema = z
   .object({
     fullName: z.string().min(2, 'Full name must be at least 2 characters').max(50).trim(),
-    email: z.string().email('Please enter a valid email address').toLowerCase().trim(),
+    email: z.email('Please enter a valid email address').toLowerCase().trim(),
     password: z
       .string()
       .min(8, 'Password must be at least 8 characters')
@@ -201,8 +201,8 @@ export const createPostSchema = z.object({
   description: z.string().max(1000, 'Description cannot exceed 1000 characters').optional().or(z.literal('')),
   categoryId: z.string().min(1, 'Please select a category'),
   tagIds: z.array(z.string()).min(1, 'Please select at least one tag').max(5, 'Maximum 5 tags allowed'),
-  destinationUrl: z.string().url('Please enter a valid website URL').optional().or(z.literal('')),
-  imageUrl: z.string().url('Image upload is required'),
+  destinationUrl: z.url('Please enter a valid website URL').optional().or(z.literal('')),
+  imageUrl: z.url('Image upload is required'),
   imageKey: z.string().min(1, 'Image key is required'),
   orientation: orientationEnum.default('PORTRAIT'),
 });
