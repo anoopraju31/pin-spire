@@ -57,17 +57,18 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
 
 ---
 
-## - [ ] Step 4: UI Form Core & Clerk Authentication (`/` & `/register`)
+## - [x] Step 4: UI Form Core & Custom Cookie-Based Authentication (`/` & `/register`)
 
 - [x] **Sub-step 4.1**: Install form dependencies (`react-hook-form`, `zod`, `@hookform/resolvers`).
   - Implement compound `<Form>` components in `components/ui/form/index.tsx` using pure Tailwind CSS.
   - Implement Zod schemas in `lib/validations/auth.ts` and `lib/validations/post.ts`.
   - _Verify_: Typecheck passes.
   - _Commit_: `feat(ui): implement compound form components and zod schemas`.
-- [x] **Sub-step 4.2**: Install `@clerk/nextjs` and configure Clerk proxy in `proxy.ts` (Next.js 16).
+- [x] **Sub-step 4.2**: Implement custom cookie session architecture in `lib/auth/session.ts` and route protection in `proxy.ts`.
+  - Signed JWT (`jose`) in `pin_spire_session` HTTP-only cookie.
   - Define public routes (`/`, `/register`) and protected routes (`/posts(.*)`).
   - _Verify_: Unauthenticated requests to `/posts` are intercepted.
-  - _Commit_: `feat(auth): configure clerk proxy and route protection`.
+  - _Commit_: `feat(auth): implement custom cookie session and route protection`.
 - [x] **Sub-step 4.3**: Build reusable Sketchbook UI elements:
   - `components/ui/sketch-input.tsx` (sketchy pencil border input).
   - `components/ui/sketch-button.tsx` (terracotta primary and draft buttons).
@@ -75,16 +76,17 @@ Once all sub-steps in a step are completed, mark the parent step as `[x]`.
   - _Verify_: Components render in isolation.
   - _Commit_: `feat(ui): build sketchbook inputs, buttons, and polaroid collage`.
 - [x] **Sub-step 4.4**: Build Login Page at `app/(auth)/page.tsx`.
-  - Match mockup `login.png` using `<Form>` + Clerk `useSignIn()`.
-  - _Verify_: Submits credentials, displays validation errors, redirects to `/posts`.
+  - Match mockup `login.png` using `<Form>` + Server Action `loginAction()`.
+  - _Verify_: Submits credentials, verifies bcrypt hash, redirects to `/posts`.
   - _Commit_: `feat(auth): implement custom sketchbook login page`.
 - [x] **Sub-step 4.5**: Build Register Page at `app/(auth)/register/page.tsx`.
-  - Match mockup `register.png` using `<Form>` + Clerk `useSignUp()`.
-  - _Verify_: Validates matching passwords & terms checkbox, registers user in Clerk.
+  - Match mockup `register.png` using `<Form>` + Server Action `registerAction()`.
+  - _Verify_: Validates matching passwords & terms checkbox, creates user with bcrypt hash in PostgreSQL.
   - _Commit_: `feat(auth): implement custom sketchbook registration page`.
-- [ ] **Sub-step 4.6**: Sync Clerk user to PostgreSQL `users` table.
-  - _Verify_: Database contains matching user row with `clerk_id`.
-  - _Commit_: `feat(auth): sync authenticated clerk users to postgresql`.
+- [x] **Sub-step 4.6**: User session management and dashboard feed integration.
+  - Implemented `getCurrentUser()` and `logoutAction()`.
+  - _Verify_: Database contains user row with `password_hash`, feed header shows user avatar and logout.
+  - _Commit_: `feat(auth): complete custom cookie session flow and dashboard integration`.
 
 ---
 

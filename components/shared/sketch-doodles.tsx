@@ -278,3 +278,22 @@ export const WarningDoodle: React.FC<{
     />
   </svg>
 );
+
+export const SketchLine: React.FC<{ className?: string }> = ({ className }) => (
+  <svg
+    viewBox="0 0 120 6"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="none"
+    className={cn('h-1.5 flex-1 select-none pointer-events-none', className)}
+    aria-hidden="true"
+  >
+    <path
+      d="M2 3.2 C25 2.2, 45 4.1, 70 2.8 C95 1.6, 110 3.8, 118 2.9"
+      stroke="#2B2523"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeOpacity="0.75"
+    />
+  </svg>
+);

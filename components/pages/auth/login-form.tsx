@@ -2,21 +2,20 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSignIn } from '@clerk/nextjs/legacy';
 
 import { loginSchema, type LoginInput } from '@/lib/validations/auth';
+import { loginAction } from '@/actions/auth';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { SketchInput } from '@/components/ui/sketch-input';
 import { SketchButton } from '@/components/ui/sketch-button';
-import { WarningDoodle } from '@/components/shared/sketch-doodles';
+import {
+  WarningDoodle,
+  //  SketchLine
+} from '@/components/shared/sketch-doodles';
 
 export const LoginForm: React.FC = () => {
-  const router = useRouter();
-  const { isLoaded, signIn, setActive } = useSignIn();
-
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -30,61 +29,35 @@ export const LoginForm: React.FC = () => {
   });
 
   const onSubmit = async (values: LoginInput) => {
-    if (!isLoaded || !signIn) return;
     setIsLoading(true);
     setAuthError(null);
 
     try {
-      const result = await signIn.create({
-        identifier: values.identifier,
-        password: values.password,
-      });
-
-      if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId });
-        router.push('/posts');
+      const result = await loginAction(values);
+      if (result.success) {
+        window.location.href = '/posts';
       } else {
-        router.push('/posts');
+        setAuthError(result.error || 'Invalid username/email or password.');
       }
     } catch (err: unknown) {
-      const clerkError = (err as { errors?: Array<{ longMessage?: string; message?: string }> })?.errors?.[0];
-      const message =
-        clerkError?.longMessage || clerkError?.message || 'Invalid username/email or password. Please try again.';
-      setAuthError(message);
+      console.error('Login error:', err);
+      setAuthError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleOAuth = async (strategy: 'oauth_google' | 'oauth_apple') => {
-    if (!isLoaded || !signIn) return;
-    setIsLoading(true);
-    setAuthError(null);
-    try {
-      await signIn.authenticateWithRedirect({
-        strategy,
-        redirectUrl: '/sso-callback',
-        redirectUrlComplete: '/posts',
-      });
-    } catch (err: unknown) {
-      const clerkError =
-        (err as { errors?: Array<{ longMessage?: string; message?: string }> })
-          ?.errors?.[0];
-      const message =
-        clerkError?.longMessage ||
-        clerkError?.message ||
-        'OAuth authentication failed. If in development, disable Bot Detection in your Clerk Dashboard under Attack Protection.';
-      setAuthError(message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const handleOAuth = (provider: string) => {
+  //   setAuthError(
+  //     `${provider} login will be connected via custom OAuth. Please sign in with username/email & password.`,
+  //   );
+  // };
 
   return (
-    <div className="flex w-full max-w-[340px] flex-col items-center sm:max-w-[360px]">
+    <div className="flex w-full max-w-85 flex-col items-center sm:max-w-90">
       {/* Top Branding (Desktop & Tablet/Mobile) */}
       <div className="mb-1 text-center">
-        {/* Mobile/Tablet Circular Badge (hidden on desktop if left panel visible) */}
+        {/* Mobile/Tablet Circular Badge */}
         <div className="mb-2 flex items-center justify-center gap-2 lg:hidden">
           <div className="bg-brand-primary border-ink flex h-9 w-9 items-center justify-center rounded-full border-2 text-base text-white shadow-[1px_2px_0px_#2B2523]">
             ✏️
@@ -188,27 +161,24 @@ export const LoginForm: React.FC = () => {
               Log In
             </SketchButton>
           </div>
-
-          {/* Clerk CAPTCHA container for challenge verification */}
-          <div id="clerk-captcha" className="w-full flex justify-center empty:hidden" />
         </form>
       </Form>
 
       {/* Hand-Drawn Styled Divider: — or continue with — */}
-      <div className="my-4 flex w-full items-center gap-2 select-none">
-        <span className="bg-ink/40 h-[1.5px] flex-1 rounded-full" />
-        <span className="font-sketch text-ink text-xs font-bold whitespace-nowrap">or continue with</span>
-        <span className="bg-ink/40 h-[1.5px] flex-1 rounded-full" />
-      </div>
+      {/* <div className="my-4 flex w-full items-center gap-2 select-none">
+        <SketchLine className="flex-1" />
+        <span className="font-sketch text-ink px-1 text-xs font-bold whitespace-nowrap">or continue with</span>
+        <SketchLine className="flex-1 -scale-x-100" />
+      </div> */}
 
       {/* OAuth Social Buttons: [ Google ] [ Apple ] */}
       <div className="grid w-full grid-cols-2 gap-3">
-        {/* Google OAuth Button */}
-        <button
+        {/* Google Button */}
+        {/* <button
           type="button"
           disabled={isLoading}
-          onClick={() => handleOAuth('oauth_google')}
-          className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[255px_15px_225px_15px/15px_225px_15px_255px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50"
+          onClick={() => handleOAuth('Google')}
+          className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[255px_15px_225px_15px/15px_225px_15px_255px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-px active:translate-y-px active:shadow-none disabled:opacity-50"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -229,20 +199,20 @@ export const LoginForm: React.FC = () => {
             />
           </svg>
           <span>Google</span>
-        </button>
+        </button> */}
 
-        {/* Apple OAuth Button */}
-        <button
+        {/* Apple Button */}
+        {/* <button
           type="button"
           disabled={isLoading}
-          onClick={() => handleOAuth('oauth_apple')}
-          className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[255px_15px_225px_15px/15px_225px_15px_255px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50"
+          onClick={() => handleOAuth('Apple')}
+          className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[255px_15px_225px_15px/15px_225px_15px_255px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-px active:translate-y-px active:shadow-none disabled:opacity-50"
         >
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.38c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.64 1.35-.58.65-1.09 1.72-.95 2.74 1 .08 2.04-.51 2.67-1.24z" />
           </svg>
           <span>Apple</span>
-        </button>
+        </button> */}
       </div>
 
       {/* Switch to Registration Link */}

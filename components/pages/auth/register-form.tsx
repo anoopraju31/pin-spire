@@ -2,32 +2,24 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSignUp, useSignIn } from '@clerk/nextjs/legacy';
 
 import { registerSchema, type RegisterInput } from '@/lib/validations/auth';
+import { registerAction } from '@/actions/auth';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { SketchInput } from '@/components/ui/sketch-input';
 import { SketchButton } from '@/components/ui/sketch-button';
-import { WarningDoodle } from '@/components/shared/sketch-doodles';
+import {
+  WarningDoodle,
+  // SketchLine
+} from '@/components/shared/sketch-doodles';
 
 export const RegisterForm: React.FC = () => {
-  const router = useRouter();
-  const { isLoaded, signUp, setActive } = useSignUp();
-  const { signIn } = useSignIn();
-
   const [authError, setAuthError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-
-  // Email verification state
-  const [pendingVerification, setPendingVerification] = React.useState(false);
-  const [verificationCode, setVerificationCode] = React.useState('');
-  const [verificationError, setVerificationError] = React.useState<string | null>(null);
-  const [isVerifying, setIsVerifying] = React.useState(false);
 
   const form = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
@@ -41,164 +33,34 @@ export const RegisterForm: React.FC = () => {
   });
 
   const onSubmit = async (values: RegisterInput) => {
-    if (!isLoaded || !signUp) return;
     setIsLoading(true);
     setAuthError(null);
 
-    const [firstName, ...rest] = values.fullName.trim().split(' ');
-    const lastName = rest.join(' ') || undefined;
-
     try {
-      await signUp.create({
-        emailAddress: values.email,
-        password: values.password,
-        firstName,
-        lastName,
-      });
+      const result = await registerAction(values);
 
-      if (signUp.status === 'missing_requirements') {
-        await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
-        setPendingVerification(true);
-      } else if (signUp.status === 'complete') {
-        await setActive({ session: signUp.createdSessionId });
-        router.push('/posts');
+      if (result.success) {
+        window.location.href = '/posts';
       } else {
-        router.push('/posts');
+        setAuthError(result.error || 'Unable to create account. Please try again.');
       }
     } catch (err: unknown) {
-      const clerkError = (err as { errors?: Array<{ longMessage?: string; message?: string }> })?.errors?.[0];
-      const message =
-        clerkError?.longMessage ||
-        clerkError?.message ||
-        'Unable to create account. Please check your information and try again.';
-      setAuthError(message);
+      console.error('Registration error:', err);
+      setAuthError('An unexpected error occurred while creating your account. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const onVerifyEmail = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isLoaded || !signUp || !verificationCode.trim()) return;
-
-    setIsVerifying(true);
-    setVerificationError(null);
-
-    try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code: verificationCode.trim(),
-      });
-
-      if (completeSignUp.status === 'complete') {
-        await setActive({ session: completeSignUp.createdSessionId });
-        router.push('/posts');
-      } else {
-        setVerificationError('Verification incomplete. Please check your code or try again.');
-      }
-    } catch (err: unknown) {
-      const clerkError = (err as { errors?: Array<{ longMessage?: string; message?: string }> })?.errors?.[0];
-      const message = clerkError?.longMessage || clerkError?.message || 'Invalid verification code. Please try again.';
-      setVerificationError(message);
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
-  const handleOAuth = async (strategy: 'oauth_google' | 'oauth_apple') => {
-    setIsLoading(true);
-    setAuthError(null);
-    try {
-      if (signIn) {
-        await signIn.authenticateWithRedirect({
-          strategy,
-          redirectUrl: '/sso-callback',
-          redirectUrlComplete: '/posts',
-        });
-      } else if (signUp) {
-        await signUp.authenticateWithRedirect({
-          strategy,
-          redirectUrl: '/sso-callback',
-          redirectUrlComplete: '/posts',
-        });
-      }
-    } catch (err: unknown) {
-      const clerkError =
-        (err as { errors?: Array<{ longMessage?: string; message?: string }> })
-          ?.errors?.[0];
-      const message =
-        clerkError?.longMessage ||
-        clerkError?.message ||
-        'OAuth authentication failed. If in development, disable Bot Detection in your Clerk Dashboard under Attack Protection.';
-      setAuthError(message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (pendingVerification) {
-    return (
-      <div className="flex w-full max-w-[340px] flex-col items-center sm:max-w-[360px]">
-        <h2 className="font-sketch text-ink mt-3 mb-2 text-center text-2xl font-extrabold sm:text-3xl">
-          Verify your email
-        </h2>
-        <p className="font-sketch text-ink-muted mb-4 text-center text-xs">
-          we sent a confirmation code to your email. enter it below to activate your sketchbook.
-        </p>
-
-        {verificationError && (
-          <div
-            role="alert"
-            className="border-error bg-error/10 text-error mb-4 flex w-full items-center gap-2 rounded-xl border-2 p-2.5 text-xs font-semibold"
-          >
-            <WarningDoodle size={18} />
-            <span>{verificationError}</span>
-          </div>
-        )}
-
-        <form onSubmit={onVerifyEmail} className="w-full space-y-3.5">
-          <div className="space-y-1">
-            <SketchInput
-              placeholder="Verification Code"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-              disabled={isVerifying}
-              autoFocus
-            />
-          </div>
-
-          <div className="pt-1">
-            <SketchButton
-              type="submit"
-              variant="primary"
-              size="lg"
-              loading={isVerifying}
-              className="font-sketch w-full py-2.5 text-base font-bold"
-            >
-              Verify &amp; Activate
-            </SketchButton>
-          </div>
-
-          <div className="pt-2 text-center">
-            <button
-              type="button"
-              onClick={async () => {
-                if (!signUp) return;
-                await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
-              }}
-              className="font-sketch text-brand-primary hover:text-brand-hover cursor-pointer text-xs font-semibold underline"
-            >
-              Didn&apos;t receive code? Resend
-            </button>
-          </div>
-        </form>
-      </div>
-    );
-  }
+  // const handleOAuth = (provider: string) => {
+  //   setAuthError(`${provider} sign-up will be connected via custom OAuth. Please sign up with email & password.`);
+  // };
 
   return (
     <div className="flex w-full max-w-[340px] flex-col items-center sm:max-w-[360px]">
-      {/* Top Branding */}
+      {/* Top Branding (Desktop & Tablet/Mobile) */}
       <div className="mb-1 text-center">
+        {/* Mobile/Tablet Circular Badge */}
         <div className="mb-2 flex items-center justify-center gap-2 lg:hidden">
           <div className="bg-brand-primary border-ink flex h-9 w-9 items-center justify-center rounded-full border-2 text-base text-white shadow-[1px_2px_0px_#2B2523]">
             ✏️
@@ -206,6 +68,7 @@ export const RegisterForm: React.FC = () => {
           <span className="font-display text-brand-primary text-3xl font-black tracking-wider">PIN-SPIRE</span>
         </div>
 
+        {/* Desktop Brand Header */}
         <div className="hidden lg:block">
           <h1 className="font-display text-brand-primary text-4xl font-black tracking-wider">PIN-SPIRE</h1>
           <p className="font-sketch text-ink mt-0.5 text-base font-semibold tracking-wide">
@@ -215,9 +78,12 @@ export const RegisterForm: React.FC = () => {
       </div>
 
       {/* Greeting Title */}
-      <h2 className="font-sketch text-ink mt-3 mb-4 text-center text-2xl font-extrabold sm:text-3xl">
-        Create your account
+      <h2 className="font-sketch text-ink mt-3 mb-2 text-center text-2xl font-extrabold sm:text-3xl">
+        Join Pin-Spire!
       </h2>
+      <p className="font-sketch text-ink-muted mb-4 text-center text-xs">
+        Sketch, pin, and organize all your creative ideas.
+      </p>
 
       {/* Global Auth Error Alert */}
       {authError && (
@@ -233,7 +99,7 @@ export const RegisterForm: React.FC = () => {
       {/* Compound Form */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-3">
-          {/* Full Name */}
+          {/* Full Name Field */}
           <FormField
             control={form.control}
             name="fullName"
@@ -248,18 +114,18 @@ export const RegisterForm: React.FC = () => {
             )}
           />
 
-          {/* Email Address */}
+          {/* Email Field */}
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem className="space-y-0.5">
-                <FormLabel className="sr-only">Email Address</FormLabel>
+                <FormLabel className="sr-only">Email</FormLabel>
                 <FormControl>
                   <SketchInput
                     {...field}
                     type="email"
-                    placeholder="Email Address"
+                    placeholder="Email address"
                     autoComplete="email"
                     disabled={isLoading}
                   />
@@ -269,18 +135,18 @@ export const RegisterForm: React.FC = () => {
             )}
           />
 
-          {/* Password */}
+          {/* Password Field */}
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem className="space-y-0.5">
-                <FormLabel className="sr-only">Create Password</FormLabel>
+                <FormLabel className="sr-only">Password</FormLabel>
                 <FormControl>
                   <SketchInput
                     {...field}
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Password"
+                    placeholder="Password (min 8 chars)"
                     autoComplete="new-password"
                     disabled={isLoading}
                     endIcon={
@@ -300,7 +166,7 @@ export const RegisterForm: React.FC = () => {
             )}
           />
 
-          {/* Confirm Password */}
+          {/* Confirm Password Field */}
           <FormField
             control={form.control}
             name="confirmPassword"
@@ -331,31 +197,7 @@ export const RegisterForm: React.FC = () => {
             )}
           />
 
-          {/* Terms & Conditions Checkbox */}
-          <FormField
-            control={form.control}
-            name="termsAccepted"
-            render={({ field }) => (
-              <FormItem className="space-y-0.5">
-                <div className="flex items-center gap-2 pt-1 select-none">
-                  <input
-                    id="terms"
-                    type="checkbox"
-                    checked={field.value}
-                    onChange={(e) => field.onChange(e.target.checked)}
-                    className="border-ink text-brand-primary accent-brand-primary h-4 w-4 cursor-pointer rounded border-2"
-                    disabled={isLoading}
-                  />
-                  <label htmlFor="terms" className="font-sketch text-ink cursor-pointer text-xs">
-                    I agree to the <span className="font-bold underline">terms &amp; privacy policy</span>
-                  </label>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Sign Up Button */}
+          {/* Create Account Submit Button */}
           <div className="pt-1">
             <SketchButton
               type="submit"
@@ -364,28 +206,26 @@ export const RegisterForm: React.FC = () => {
               loading={isLoading}
               className="font-sketch w-full py-2.5 text-base font-bold"
             >
-              Sign Up
+              Create Account
             </SketchButton>
           </div>
-
-          {/* Clerk CAPTCHA container for challenge verification */}
-          <div id="clerk-captcha" className="w-full flex justify-center empty:hidden" />
         </form>
       </Form>
 
-      {/* Hand-Drawn Styled Divider: — or sign up with — */}
-      <div className="my-3.5 flex w-full items-center gap-2 select-none">
-        <span className="bg-ink/40 h-[1.5px] flex-1 rounded-full" />
-        <span className="font-sketch text-ink text-xs font-bold whitespace-nowrap">or sign up with</span>
-        <span className="bg-ink/40 h-[1.5px] flex-1 rounded-full" />
-      </div>
+      {/* Hand-Drawn Styled Divider: — or continue with — */}
+      {/* <div className="my-4 flex w-full items-center gap-2 select-none">
+        <SketchLine className="flex-1" />
+        <span className="font-sketch text-ink px-1 text-xs font-bold whitespace-nowrap">or continue with</span>
+        <SketchLine className="flex-1 -scale-x-100" />
+      </div> */}
 
-      {/* OAuth Social Buttons */}
+      {/* Social Registration Buttons */}
       <div className="grid w-full grid-cols-2 gap-3">
-        <button
+        {/* Google Button */}
+        {/* <button
           type="button"
           disabled={isLoading}
-          onClick={() => handleOAuth('oauth_google')}
+          onClick={() => handleOAuth('Google')}
           className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[255px_15px_225px_15px/15px_225px_15px_255px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50"
         >
           <svg className="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
@@ -407,26 +247,27 @@ export const RegisterForm: React.FC = () => {
             />
           </svg>
           <span>Google</span>
-        </button>
+        </button> */}
 
-        <button
+        {/* Apple Button */}
+        {/* <button
           type="button"
           disabled={isLoading}
-          onClick={() => handleOAuth('oauth_apple')}
+          onClick={() => handleOAuth('Apple')}
           className="border-ink font-sketch text-ink hover:bg-surface-tint flex cursor-pointer items-center justify-center gap-2 rounded-[255px_15px_225px_15px/15px_225px_15px_255px] border-2 bg-white px-3 py-2 text-xs font-bold shadow-[1px_2px_0px_#2B2523] transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50"
         >
           <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.38c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.64 1.35-.58.65-1.09 1.72-.95 2.74 1 .08 2.04-.51 2.67-1.24z" />
           </svg>
           <span>Apple</span>
-        </button>
+        </button> */}
       </div>
 
       {/* Switch to Login Link */}
       <div className="font-sketch text-ink mt-5 text-center text-sm font-semibold">
         <span>Already have an account? </span>
         <Link href="/" className="hover:text-brand-primary font-bold underline">
-          Log in
+          Log in!
         </Link>
       </div>
     </div>

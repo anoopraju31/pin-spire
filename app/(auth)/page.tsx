@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/auth/session';
 import { PolaroidCollage } from '@/components/shared/polaroid-collage';
 import { LoginForm } from '@/components/pages/auth/login-form';
 import { SketchCoffeeStain } from '@/components/shared/sketch-coffee-stain';
@@ -16,7 +18,12 @@ export const metadata: Metadata = {
   description: 'Sign in to your Pin-Spire sketchbook to find, pin, and save creative ideas.',
 };
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const session = await getSession();
+  if (session?.userId) {
+    redirect('/posts');
+  }
+
   return (
     <main className="bg-canvas relative flex min-h-screen w-full items-center justify-center overflow-x-hidden">
       {/* Decorative Doodles & Coffee Stains for Mobile/Tablet Background */}
@@ -46,7 +53,7 @@ export default function LoginPage() {
       </div>
 
       {/* Main Open Sketchbook Dual-Spread (Desktop) / Centered Column (Mobile/Tablet) */}
-      <div className="relative flex min-h-screen w-full max-w-6xl flex-col items-center justify-center p-6 sm:p-10 lg:min-h-[640px] lg:flex-row lg:p-12">
+      <div className="relative flex min-h-screen w-full max-w-6xl flex-col items-center justify-center p-6 sm:p-10 lg:min-h-160 lg:flex-row lg:p-12">
         {/* Left Page: Polaroid Collage Spread (Desktop) */}
         <div className="hidden h-full w-1/2 flex-col items-center justify-center pr-8 lg:flex lg:pr-12">
           <PolaroidCollage mode="login" />
