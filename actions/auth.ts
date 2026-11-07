@@ -58,7 +58,7 @@ export async function registerAction(input: RegisterInput): Promise<AuthActionRe
         email: normalizedEmail,
         username,
         passwordHash,
-      } as any,
+      },
     });
 
     // Create cookie session
@@ -91,17 +91,11 @@ export async function loginAction(input: LoginInput): Promise<AuthActionResult> 
 
   try {
     // Find user by email or username
-    const user = (await prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         OR: [{ email: trimmedIdentifier.toLowerCase() }, { username: trimmedIdentifier }],
       },
-    })) as {
-      id: string;
-      passwordHash: string;
-      fullName: string;
-      username: string;
-      email: string;
-    } | null;
+    });
 
     if (!user) {
       return {
